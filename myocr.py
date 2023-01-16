@@ -12,15 +12,14 @@ import os
 import re
 import shutil
 import sys
-
+import constant
 import fitz
 import requests
-import pathlib
 
 
 class baiduApi(object):
-    APIKey = ""
-    SecretKey = ""
+    APIKey = constant.APIKey
+    SecretKey = constant.SecretKey
     token_url = "https://aip.baidubce.com/oauth/2.0/token"
     ocr_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/formula"
     first_text = ""
@@ -72,9 +71,8 @@ class baiduApi(object):
 
 
 class PDFToImage(object):
-    def __init__(self,source_file):
+    def __init__(self, source_file):
         self.source_file = source_file
-
 
     def generateImage(self, start_page=1, end_page=None):
 
@@ -85,7 +83,7 @@ class PDFToImage(object):
         if end_page is None:
             end_page = pdf_pages
 
-        des_file = self.source_file.replace('.PDF','.txt').replace('.pdf','.txt')
+        des_file = self.source_file.replace('.PDF', '.txt').replace('.pdf', '.txt')
 
         print(des_file)
 
@@ -97,8 +95,7 @@ class PDFToImage(object):
                 zoom_y = 2
                 mat = fitz.Matrix(zoom_x, zoom_y)
 
-                pix = page.get_pixmap(matrix=mat,alpha=False).tobytes()
-
+                pix = page.get_pixmap(matrix=mat, alpha=False).tobytes()
 
                 try:
                     ocr_text = baiduApi(pix)
@@ -112,6 +109,7 @@ class PDFToImage(object):
 
                     sys.exit(0)
                 f.write(modify(ocr_text.text))
+
 
 def modify(words):
     words = words.replace(" ", "")
@@ -221,14 +219,14 @@ def modify(words):
 if __name__ == "__main__":
     des_path = r'F:\BaiduSyncdisk\学习资源\待学习'
     exist_files = []
-    for root,dir,files in os.walk(des_path):
+    for root, dir, files in os.walk(des_path):
         exist_files += files
 
     pdf_path = r'f:\BaiduSyncdisk\学习资源\pdf文件'
 
     if os.path.exists('record.txt'):
         with open('record.txt', 'r', encoding='utf-8') as record:
-            book = record.readline().replace('\n','')
+            book = record.readline().replace('\n', '')
             file = book.split('\\')[-1]
             start_page = int(record.readline())
             pix = PDFToImage(book)
@@ -236,32 +234,19 @@ if __name__ == "__main__":
             des_pdf = f'{des_path}\{file}'
             des_txt = des_pdf.replace('.pdf', '.txt')
             source_txt = book.replace('.pdf', '.txt')
-            shutil.move(source_txt,des_txt)
-            shutil.move(book,des_pdf)
+            shutil.move(source_txt, des_txt)
+            shutil.move(book, des_pdf)
 
-
-    for root,dir,files in os.walk(pdf_path):
+    for root, dir, files in os.walk(pdf_path):
         for file in files:
-            book=f'{root}\{file}'
+            book = f'{root}\{file}'
 
             print(book)
 
             pix = PDFToImage(book)
             pix.generateImage()
             des_pdf = f'{des_path}\{file}'
-            des_txt = des_pdf.replace('.pdf','.txt')
-            source_txt = book.replace('.pdf','.txt')
+            des_txt = des_pdf.replace('.pdf', '.txt')
+            source_txt = book.replace('.pdf', '.txt')
             shutil.move(source_txt, des_txt)
             shutil.move(book, des_pdf)
-
-
-
-
-
-
-
-
-
-
-
-
