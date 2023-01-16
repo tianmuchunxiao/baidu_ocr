@@ -19,8 +19,8 @@ import pathlib
 
 
 class baiduApi(object):
-    APIKey = "djgHhDWpnXYdkrqcZhRyVUtc"
-    SecretKey = "8RprqrqeAnnaYQDkFxnpn6WgZgyqgTjR"
+    APIKey = ""
+    SecretKey = ""
     token_url = "https://aip.baidubce.com/oauth/2.0/token"
     ocr_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/formula"
     first_text = ""
